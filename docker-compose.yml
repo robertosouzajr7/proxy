@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  infobip-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: infobip-proxy
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - TARGET_BASE_URL=${TARGET_BASE_URL}
+      - TARGET_SSO_URL=${TARGET_SSO_URL}
+      - PROXY_ENABLED=true
+      - ENABLE_IP_WHITELIST=true
+      - ENABLE_VPN_CHECK=${ENABLE_VPN_CHECK:-false}
+      - AUDIT_LOG_FILE=true
+      - AUDIT_LOG_CONSOLE=false
+      - RATE_LIMIT_WINDOW_MS=60000
+      - RATE_LIMIT_MAX=100
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - proxy-network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/status']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  proxy-network:
+    driver: bridge
