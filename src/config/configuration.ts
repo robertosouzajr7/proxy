@@ -30,7 +30,10 @@ export default () => ({
       '192.168.71.56',
       '192.168.71.254',
       '189.89.171.194',
-      '127.0.0.1', // localhost
+      '127.0.0.1', // localhost,
+      '189.89.171.194',
+      '172.31.46.60', // ip privado - aws - api converte imagem
+      '34.203.211.199', // Ip AWS - Api converte imagem
     ],
     allowedDomains: [
       'forms-homo.salvador.ba.gov.br',
